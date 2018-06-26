@@ -58,6 +58,8 @@ module BabySqueel
           @table.association(name.to_s.singularize)
         elsif @table._scope.reflect_on_association(name.to_s.singularize)
           @table.association(name.to_s.pluralize)
+        elsif @table._table.name == name.to_s
+          @table
         else
           @table.association(name)
         end
@@ -77,7 +79,8 @@ module BabySqueel
         @table._scope.column_names.include?(name.to_s)
       when :association
         !@table._scope.reflect_on_association(name.to_s.singularize).nil? ||
-          !@table._scope.reflect_on_association(name.to_s.pluralize).nil?
+          !@table._scope.reflect_on_association(name.to_s.pluralize).nil? ||
+          @table._table.name == name.to_s
       when :function, :attribute
         true
       end
